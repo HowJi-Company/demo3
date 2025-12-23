@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Card Admin Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --primary: #3b82f6;
+        --primary-hover: #2563eb;
+        --bg-main: #0b0f14;
+        --bg-card: #111823;
+        --bg-card-hover: #1a2332;
+        --border: #1f2a37;
+        --text-primary: #e6edf3;
+        --text-muted: #9fb0c3;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Noto Sans TC", sans-serif;
+        background: linear-gradient(135deg, #0b0f14 0%, #1a1f2e 100%);
+        color: var(--text-primary);
+        min-height: 100vh;
+      }
+      .wrap {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+      }
+      .card:hover {
+        box-shadow: 0 15px 50px rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.3);
+      }
+      .row {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .col {
+        flex: 1 1 320px;
+        min-width: 280px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0 0 8px;
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      h2 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 12px;
+        color: var(--text-primary);
+      }
+      h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 8px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      label {
+        display: block;
+        font-size: 12px;
+        color: #9fb0c3;
+        margin: 10px 0 6px;
+      }
+      input {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(11, 18, 32, 0.6);
+        color: var(--text-primary);
+        outline: none;
+        transition: all 0.3s ease;
+        font-size: 14px;
+      }
+      input:focus {
+        border-color: var(--primary);
+        background: rgba(11, 18, 32, 0.8);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+      button {
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: linear-gradient(135deg, #16243a 0%, #1e2f47 100%);
+        color: var(--text-primary);
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        font-size: 14px;
+      }
+      button:hover {
+        border-color: var(--primary);
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-hover) 100%
+        );
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+      button:active {
+        transform: translateY(0);
+      }
+      .btns {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .muted {
+        color: #9fb0c3;
+        font-size: 12px;
+      }
+      .danger {
+        color: #ffb4b4;
+      }
+      .ok {
+        color: #b7ffcf;
+      }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 24px;
+        padding: 20px 24px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      }
+      .hidden {
+        display: none !important;
+      }
+      .tabs {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 0 0 24px 0;
+        padding-bottom: 16px;
+        border-bottom: 2px solid var(--border);
+      }
+      .tab {
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: rgba(11, 18, 32, 0.4);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+      .tab:hover {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.3);
+        color: var(--text-primary);
+      }
+      .tab.active {
+        border-color: var(--primary);
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.2) 0%,
+          rgba(139, 92, 246, 0.2) 100%
+        );
+        color: var(--text-primary);
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+      }
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: rgba(11, 18, 32, 0.6);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        font-size: 12px;
+        line-height: 1.6;
+        font-family: "Courier New", monospace;
+        color: var(--text-primary);
+        overflow-x: auto;
+      }
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        margin: 2px;
+      }
+      .badge-success {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--success);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+      .badge-info {
+        background: rgba(59, 130, 246, 0.2);
+        color: var(--primary);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+      .badge-warning {
+        background: rgba(245, 158, 11, 0.2);
+        color: var(--warning);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(11, 18, 32, 0.3);
+      }
+      th,
+      td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        vertical-align: top;
+      }
+      th {
+        text-align: left;
+        color: var(--text-muted);
+        background: rgba(11, 18, 32, 0.6);
+        position: sticky;
+        top: 0;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+      }
+      tr:hover td {
+        background: rgba(59, 130, 246, 0.05);
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .pill {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: rgba(59, 130, 246, 0.1);
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--primary);
+        font-family: "Courier New", monospace;
+      }
+      .stat-card {
+        background: rgba(11, 18, 32, 0.4);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        transition: all 0.3s ease;
+      }
+      .stat-card:hover {
+        background: rgba(11, 18, 32, 0.6);
+        border-color: rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+      .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+        font-family: "Courier New", monospace;
+      }
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .loading {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-muted);
+      }
+      .empty-state i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+      @media (max-width: 900px) {
+        .grid2 {
+          grid-template-columns: 1fr;
+        }
+        .stat-grid {
+          grid-template-columns: 1fr;
+        }
+        .wrap {
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div>
+          <h1><i class="bi bi-graph-up-arrow"></i> Card Admin Dashboard</h1>
+          <div class="muted" id="envInfo"></div>
+        </div>
+        <div class="btns">
+          <span class="muted" id="userInfo"></span>
+          <button id="btnLogout" class="hidden">
+            <i class="bi bi-box-arrow-right"></i> 登出
+          </button>
+        </div>
+      </div>
+
+      <!-- Login -->
+      <div id="loginPanel" class="card">
+        <h2><i class="bi bi-shield-lock"></i> 管理員登入</h2>
+        <div class="row">
+          <div class="col">
+            <label>Email</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="admin@example.com"
+              autocomplete="username"
+            />
+          </div>
+          <div class="col">
+            <label>Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+          </div>
+        </div>
+        <div class="btns" style="margin-top: 12px">
+          <button id="btnLogin">
+            <i class="bi bi-box-arrow-in-right"></i> 登入
+          </button>
+          <span id="loginMsg" class="muted"></span>
+        </div>
+        <div class="muted" style="margin-top: 10px">
+          注意：此頁面使用 Firebase Auth + Firestore 讀取資料。你目前 rules
+          只要登入即可 read，就能正常顯示。
+        </div>
+      </div>
+
+      <!-- App -->
+      <div id="appPanel" class="hidden">
+        <div class="card">
+          <div class="tabs">
+            <button class="tab active" data-tab="stats">
+              <i class="bi bi-bar-chart"></i> card_statistics
+            </button>
+            <button class="tab" data-tab="shareCounts">
+              <i class="bi bi-share"></i> card_share_counts
+            </button>
+            <button class="tab" data-tab="senders">
+              <i class="bi bi-people"></i> card_senders
+            </button>
+            <button class="tab" data-tab="raw">
+              <i class="bi bi-code-slash"></i> Raw JSON
+            </button>
+          </div>
+
+          <!-- Stats -->
+          <div id="tab-stats">
+            <div id="statsOverview" class="stat-grid"></div>
+            <div class="grid2" style="margin-top: 24px">
+              <div class="card" style="padding: 20px">
+                <h2><i class="bi bi-calendar-range"></i> 快速查詢日期統計</h2>
+                <div class="muted" style="margin-bottom: 16px">
+                  輸入日期（YYYYMMDD），會讀取
+                  /card_statistics/history/history/{date}
+                </div>
+                <div class="row" style="margin-top: 10px">
+                  <div class="col">
+                    <label>日期 (YYYYMMDD)</label>
+                    <input
+                      id="historyDate"
+                      placeholder="例如：20251224"
+                      maxlength="8"
+                    />
+                  </div>
+                  <div class="col">
+                    <label>parent docId（可選，預設：history）</label>
+                    <input
+                      id="historyParentId"
+                      placeholder="例如：history（預設值）"
+                      value="history"
+                    />
+                  </div>
+                </div>
+                <div class="btns" style="margin-top: 12px">
+                  <button id="btnLoadHistory">
+                    <i class="bi bi-search"></i> 查詢日期統計
+                  </button>
+                  <button id="btnLoadTodayHistory" type="button">
+                    <i class="bi bi-calendar-check"></i> 今天
+                  </button>
+                  <span id="historyMsg" class="muted"></span>
+                </div>
+                <div id="historyResultContainer" style="margin-top: 16px">
+                  <div
+                    id="historyDateTitle"
+                    style="
+                      margin-bottom: 16px;
+                      font-size: 18px;
+                      font-weight: 600;
+                      color: var(--text-primary);
+                    "
+                  ></div>
+                  <div id="historyStatCards" class="stat-grid"></div>
+                  <div id="historyRawData" style="margin-top: 16px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Share counts -->
+          <div id="tab-shareCounts" class="hidden">
+            <h2><i class="bi bi-share-fill"></i> card_share_counts（即時）</h2>
+            <div class="muted" style="margin-bottom: 16px">
+              顯示所有 documents
+            </div>
+            <div style="height: 520px; overflow: auto; margin-top: 10px">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 220px">docId</th>
+                    <th>data</th>
+                  </tr>
+                </thead>
+                <tbody id="shareCountsTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Senders -->
+          <div id="tab-senders" class="hidden">
+            <h2><i class="bi bi-person-badge"></i> card_senders（即時）</h2>
+            <div class="muted" style="margin-bottom: 16px">
+              顯示所有 documents
+            </div>
+            <div style="height: 520px; overflow: auto; margin-top: 10px">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 220px">docId</th>
+                    <th>data</th>
+                  </tr>
+                </thead>
+                <tbody id="sendersTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Raw -->
+          <div id="tab-raw" class="hidden">
+            <h2><i class="bi bi-filetype-json"></i> Raw JSON</h2>
+            <div class="muted" style="margin-bottom: 16px">
+              方便你快速複製貼上檢查
+            </div>
+            <div class="row" style="margin-top: 10px">
+              <div class="col">
+                <div class="pill">card_statistics</div>
+                <pre
+                  id="rawStats"
+                  style="margin-top: 8px; height: 240px; overflow: auto"
+                ></pre>
+              </div>
+              <div class="col">
+                <div class="pill">card_share_counts</div>
+                <pre
+                  id="rawShareCounts"
+                  style="margin-top: 8px; height: 240px; overflow: auto"
+                ></pre>
+              </div>
+              <div class="col">
+                <div class="pill">card_senders</div>
+                <pre
+                  id="rawSenders"
+                  style="margin-top: 8px; height: 240px; overflow: auto"
+                ></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase (Modular SDK via ES Modules) -->
+    <script type="module">
+      // 1) Firebase 專案設定
+      const firebaseConfig = {
+        apiKey: "AIzaSyCGAdNce7wCJLPmqPZ4ID3PxvBDFDD8uSY",
+        authDomain: "tjc-tw.firebaseapp.com",
+        projectId: "tjc-tw",
+        storageBucket: "tjc-tw.firebasestorage.app",
+        messagingSenderId: "857954351277",
+        appId: "1:857954351277:web:448c392836ef137e44ee24",
+      };
+
+      // 2) Firebase imports
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signInWithEmailAndPassword,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        getDoc,
+        getDocs,
+        onSnapshot,
+        query,
+        orderBy,
+        limit,
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+      // 3) Init
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // UI refs
+      const envInfo = document.getElementById("envInfo");
+      const userInfo = document.getElementById("userInfo");
+      const btnLogout = document.getElementById("btnLogout");
+
+      const loginPanel = document.getElementById("loginPanel");
+      const appPanel = document.getElementById("appPanel");
+
+      const emailEl = document.getElementById("email");
+      const passEl = document.getElementById("password");
+      const btnLogin = document.getElementById("btnLogin");
+      const loginMsg = document.getElementById("loginMsg");
+
+      const shareCountsTbody = document.getElementById("shareCountsTbody");
+      const sendersTbody = document.getElementById("sendersTbody");
+
+      const rawStats = document.getElementById("rawStats");
+      const rawShareCounts = document.getElementById("rawShareCounts");
+      const rawSenders = document.getElementById("rawSenders");
+
+      const historyDateEl = document.getElementById("historyDate");
+      const historyParentIdEl = document.getElementById("historyParentId");
+      const btnLoadHistory = document.getElementById("btnLoadHistory");
+      const btnLoadTodayHistory = document.getElementById(
+        "btnLoadTodayHistory"
+      );
+      const historyMsg = document.getElementById("historyMsg");
+      const historyDateTitle = document.getElementById("historyDateTitle");
+      const historyStatCards = document.getElementById("historyStatCards");
+      const historyRawData = document.getElementById("historyRawData");
+
+      // Info
+      envInfo.textContent = `projectId: ${firebaseConfig.projectId}`;
+
+      // Tabs
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const tabPanels = {
+        stats: document.getElementById("tab-stats"),
+        shareCounts: document.getElementById("tab-shareCounts"),
+        senders: document.getElementById("tab-senders"),
+        raw: document.getElementById("tab-raw"),
+      };
+      tabs.forEach((t) => {
+        t.addEventListener("click", () => {
+          tabs.forEach((x) => x.classList.remove("active"));
+          t.classList.add("active");
+          const key = t.dataset.tab;
+          Object.entries(tabPanels).forEach(([k, el]) => {
+            el.classList.toggle("hidden", k !== key);
+          });
+        });
+      });
+
+      // Helpers
+      const escapeHtml = (s) =>
+        String(s)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;");
+
+      const formatNumber = (num) => {
+        if (typeof num !== "number") return num;
+        return num.toLocaleString("zh-TW");
+      };
+
+      const renderStatCards = (container, data) => {
+        if (!data || Object.keys(data).length === 0) {
+          container.innerHTML =
+            '<div class="empty-state"><i class="bi bi-inbox"></i><div>暫無數據</div></div>';
+          return;
+        }
+
+        const statFields = [
+          { key: "view_home_count", label: "進入首頁總人數", icon: "bi-house" },
+          {
+            key: "view_keyword_step_count",
+            label: "進入關鍵字選擇總人數",
+            icon: "bi-search",
+          },
+          {
+            key: "view_frame_step_count",
+            label: "進入選擇套框的人數",
+            icon: "bi-grid",
+          },
+          {
+            key: "select_frame_total_count",
+            label: "總選擇圖框人數",
+            icon: "bi-check-circle",
+          },
+          {
+            key: "select_frame_card01_count",
+            label: "1號圖框選擇人數",
+            icon: "bi-1-circle",
+          },
+          {
+            key: "select_frame_card02_count",
+            label: "2號圖框選擇人數",
+            icon: "bi-2-circle",
+          },
+          {
+            key: "select_frame_card03_count",
+            label: "3號圖框選擇人數",
+            icon: "bi-3-circle",
+          },
+          {
+            key: "select_frame_card04_count",
+            label: "4號圖框選擇人數",
+            icon: "bi-4-circle",
+          },
+          {
+            key: "select_frame_card05_count",
+            label: "5號圖框選擇人數",
+            icon: "bi-5-circle",
+          },
+          {
+            key: "select_frame_card06_count",
+            label: "6號圖框選擇人數",
+            icon: "bi-6-circle",
+          },
+        ];
+
+        container.innerHTML = statFields
+          .map(({ key, label, icon }) => {
+            const value = data[key] || 0;
+            return `
+              <div class="stat-card">
+                <div class="stat-label">
+                  <i class="bi ${icon}"></i> ${label}
+                </div>
+                <div class="stat-value">${formatNumber(value)}</div>
+              </div>
+            `;
+          })
+          .join("");
+      };
+
+      const renderRows = (tbody, items, showStats = false) => {
+        if (!items || items.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="2" class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <div>暫無數據</div>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = items
+          .map(({ id, data }) => {
+            let dataDisplay = "";
+            if (showStats && data && typeof data === "object") {
+              // 格式化統計數據顯示
+              const statFields = [
+                "view_home_count",
+                "view_keyword_step_count",
+                "view_frame_step_count",
+                "select_frame_total_count",
+                "select_frame_card01_count",
+                "select_frame_card02_count",
+                "select_frame_card03_count",
+                "select_frame_card04_count",
+                "select_frame_card05_count",
+                "select_frame_card06_count",
+              ];
+              const statsHtml = statFields
+                .filter((key) => data[key] !== undefined)
+                .map((key) => {
+                  const label = key.replace(/_count/g, "").replace(/_/g, " ");
+                  return `<span class="badge badge-info">${label}: ${formatNumber(
+                    data[key]
+                  )}</span>`;
+                })
+                .join(" ");
+              dataDisplay = `<div style="margin-bottom: 8px">${statsHtml}</div><pre>${escapeHtml(
+                JSON.stringify(data, null, 2)
+              )}</pre>`;
+            } else {
+              dataDisplay = `<pre>${escapeHtml(
+                JSON.stringify(data, null, 2)
+              )}</pre>`;
+            }
+            return `
+                <tr>
+                  <td><span class="pill">${escapeHtml(id)}</span></td>
+                  <td>${dataDisplay}</td>
+                </tr>
+              `;
+          })
+          .join("");
+      };
+
+      // Auth UI
+      btnLogin.addEventListener("click", async () => {
+        loginMsg.textContent = "";
+        try {
+          const email = emailEl.value.trim();
+          const password = passEl.value;
+          if (!email || !password) {
+            loginMsg.textContent = "請輸入 Email 與 Password";
+            return;
+          }
+          await signInWithEmailAndPassword(auth, email, password);
+          loginMsg.textContent = "登入成功";
+          loginMsg.classList.remove("danger");
+          loginMsg.classList.add("ok");
+        } catch (err) {
+          console.error(err);
+          loginMsg.textContent = `登入失敗：${err?.message || err}`;
+          loginMsg.classList.add("danger");
+        }
+      });
+
+      btnLogout.addEventListener("click", async () => {
+        await signOut(auth);
+      });
+
+      // Firestore subscriptions
+      let unsubStats = null;
+      let unsubShareCounts = null;
+      let unsubSenders = null;
+
+      const startSubscriptions = () => {
+        // card_statistics
+        unsubStats = onSnapshot(
+          collection(db, "card_statistics"),
+          (snap) => {
+            const items = snap.docs.map((d) => ({ id: d.id, data: d.data() }));
+            rawStats.textContent = JSON.stringify(items, null, 2);
+
+            // 顯示總統計概覽（如果有 stats 文檔）
+            const statsDoc = items.find((item) => item.id === "stats");
+            if (statsDoc && statsDoc.data) {
+              renderStatCards(
+                document.getElementById("statsOverview"),
+                statsDoc.data
+              );
+            } else if (items.length > 0 && items[0].data) {
+              // 如果沒有 stats，顯示第一個文檔的統計
+              renderStatCards(
+                document.getElementById("statsOverview"),
+                items[0].data
+              );
+            }
+          },
+          (err) => console.error("stats onSnapshot error:", err)
+        );
+
+        // card_share_counts
+        unsubShareCounts = onSnapshot(
+          collection(db, "card_share_counts"),
+          (snap) => {
+            const items = snap.docs.map((d) => ({ id: d.id, data: d.data() }));
+            renderRows(shareCountsTbody, items);
+            rawShareCounts.textContent = JSON.stringify(items, null, 2);
+          },
+          (err) => console.error("share_counts onSnapshot error:", err)
+        );
+
+        // card_senders
+        unsubSenders = onSnapshot(
+          collection(db, "card_senders"),
+          (snap) => {
+            const items = snap.docs.map((d) => ({ id: d.id, data: d.data() }));
+            renderRows(sendersTbody, items);
+            rawSenders.textContent = JSON.stringify(items, null, 2);
+          },
+          (err) => console.error("senders onSnapshot error:", err)
+        );
+      };
+
+      const stopSubscriptions = () => {
+        if (unsubStats) unsubStats();
+        if (unsubShareCounts) unsubShareCounts();
+        if (unsubSenders) unsubSenders();
+        unsubStats = unsubShareCounts = unsubSenders = null;
+
+        const statsOverview = document.getElementById("statsOverview");
+        if (statsOverview) statsOverview.innerHTML = "";
+        shareCountsTbody.innerHTML = "";
+        sendersTbody.innerHTML = "";
+        if (historyStatCards) historyStatCards.innerHTML = "";
+        if (historyDateTitle) historyDateTitle.textContent = "";
+        if (historyRawData) historyRawData.innerHTML = "";
+        rawStats.textContent = "";
+        rawShareCounts.textContent = "";
+        rawSenders.textContent = "";
+      };
+
+      // 獲取當前日期字串 (YYYYMMDD)
+      const getCurrentDateString = () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        return `${year}${month}${day}`;
+      };
+
+      // 載入今天的日期
+      btnLoadTodayHistory.addEventListener("click", () => {
+        historyDateEl.value = getCurrentDateString();
+      });
+
+      // History loader (single date document)
+      btnLoadHistory.addEventListener("click", async () => {
+        historyMsg.textContent = "";
+        historyDateTitle.textContent = "";
+        historyStatCards.innerHTML = "";
+        historyRawData.innerHTML = "";
+
+        const dateStr = historyDateEl.value.trim();
+        const parentId = historyParentIdEl.value.trim() || "history";
+
+        if (!dateStr) {
+          historyMsg.textContent = "請輸入日期（YYYYMMDD）";
+          historyMsg.classList.add("danger");
+          return;
+        }
+
+        // 驗證日期格式
+        if (!/^\d{8}$/.test(dateStr)) {
+          historyMsg.textContent =
+            "日期格式錯誤，請輸入 YYYYMMDD（例如：20251224）";
+          historyMsg.classList.add("danger");
+          return;
+        }
+
+        try {
+          historyMsg.innerHTML = '<span class="loading"></span>載入中...';
+          historyMsg.classList.remove("danger", "ok");
+
+          // 路徑：/card_statistics/{parentId}/history/{dateStr}
+          // 例如：/card_statistics/history/history/20251224
+          // 注意：在 Firestore 中，子集合 "history" 位於 parentId 文檔下
+          // doc() 參數：集合、文檔、子集合、文檔
+          const dateDocRef = doc(
+            db,
+            "card_statistics",
+            parentId,
+            "history",
+            dateStr
+          );
+
+          const dateDocSnap = await getDoc(dateDocRef);
+
+          if (!dateDocSnap.exists()) {
+            historyStatCards.innerHTML = `
+              <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <div>日期 ${dateStr} 沒有統計記錄</div>
+              </div>
+            `;
+            historyMsg.textContent = `未找到日期 ${dateStr} 的記錄`;
+            historyMsg.classList.add("muted");
+          } else {
+            const data = dateDocSnap.data();
+            // 格式化日期顯示
+            const year = dateStr.substring(0, 4);
+            const month = dateStr.substring(4, 6);
+            const day = dateStr.substring(6, 8);
+            const dateDisplay = `${year}-${month}-${day}`;
+
+            // 顯示日期標題
+            historyDateTitle.innerHTML = `
+              <i class="bi bi-calendar3"></i> ${dateDisplay}
+              <span class="muted" style="font-size: 14px; font-weight: normal; margin-left: 8px">(${dateStr})</span>
+            `;
+
+            // 使用卡片方式顯示統計數據
+            renderStatCards(historyStatCards, data);
+
+            // 顯示原始 JSON 數據（可選）
+            historyRawData.innerHTML = `
+              <details style="margin-top: 16px">
+                <summary style="cursor: pointer; color: var(--text-muted); font-size: 12px; margin-bottom: 8px">
+                  <i class="bi bi-code-slash"></i> 查看原始 JSON 數據
+                </summary>
+                <pre>${escapeHtml(JSON.stringify(data, null, 2))}</pre>
+              </details>
+            `;
+
+            historyMsg.textContent = `成功載入日期 ${dateDisplay} 的統計`;
+            historyMsg.classList.add("ok");
+          }
+        } catch (err) {
+          console.error(err);
+          historyMsg.textContent = `讀取失敗：${err?.message || err}`;
+          historyMsg.classList.add("danger");
+        }
+      });
+
+      // Auth state
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // logged in
+          loginPanel.classList.add("hidden");
+          appPanel.classList.remove("hidden");
+          btnLogout.classList.remove("hidden");
+          userInfo.textContent = `已登入：${user.email || user.uid}`;
+          startSubscriptions();
+        } else {
+          // logged out
+          loginPanel.classList.remove("hidden");
+          appPanel.classList.add("hidden");
+          btnLogout.classList.add("hidden");
+          userInfo.textContent = "";
+          stopSubscriptions();
+        }
+      });
+    </script>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
